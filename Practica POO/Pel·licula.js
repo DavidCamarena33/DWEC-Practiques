@@ -1,8 +1,7 @@
-class pel·licula{
+export class Pel·licula extends Material{
     constructor(titol, director, genere, disponibles){
-        this.titol = titol;
+        super(titol, disponibles);
         this.director = director;
         this.genere = genere;
-        this.director = disponibles;
     }
 }

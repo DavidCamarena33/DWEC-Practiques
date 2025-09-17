@@ -1,7 +1,6 @@
-class soci{
+export class Soci extends Persones{
     constructor(nom, dni, llista){
-        this.nom = nom;
-        this.dni = dni;
+        super(nom, dni);
         this.llista = [];
     }
 }

@@ -1,7 +1,6 @@
-class administrador{
+export class Administrador extends Persones{
     constructor(nom, dni, carrec){
-        this.nom = nom;
-        this.dni = dni;
+        super(nom, dni);
         this.carrec = carrec;
     }
 }
