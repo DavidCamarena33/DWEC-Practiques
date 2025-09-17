@@ -1,11 +1,15 @@
-import { Llibre } from "./Llibre";
-import { Pel·licula } from "./Pel·licula";
-import { Revista } from "./Revista";
-import { Soci } from "./Soci";
-import { Administrador } from "./Administrador";
+import { Llibre } from "./Llibre.js";
+import { Pel·licula } from "./Pel·licula.js";
+import { Revista } from "./Revista.js";
+import { Soci } from "./Soci.js";
+import { Administrador } from "./Administrador.js";
 
 let opcio;
 let Llibres = [];
+let Revistes = [];
+let Pelis = [];
+let Socis = [];
+let Admins = [];
 
 do{
     console.log("Menu");
@@ -26,21 +30,88 @@ do{
     switch(opcio){
         case 1:
             let LlibreCreat = CrearLlibre();
+            LlibreCreat.psuh(Llibres);
             break;
 
         case 2:
-            CrearRevista();
+            let RevistaCrada = CrearRevista();
+            RevistaCrada.push(Revistes);
             break;
 
         case 3:
-            CrearPeli();
+            let PeliCreada = CrearPeli();
+            PeliCreada.push(Pelis);
             break;
 
         case 4:
-            CrearSoci();
+            let SociCreat = CrearSoci();
+            SociCreat.push(Socis);
             break;
 
         case 5:
+            let AdminCreat = CrearAdmin();
+            AdminCreat.push(Admins);
+            break;
+
+        case 6:
+            let nomsoci = ComprobarSoci(dniso);
+
+            console.log(" 1. Llibre / 2. Revista / 3. Pel·licula");
+            let desicio = prompt("Que vols alquilar?");
+            let alquilar;
+            let item;
+
+            if(desicio == 1){
+                MostrarLlibres();
+                item = prompt("Quin item vols alquilar");
+                alquilar = Llibres[item - 1 ];
+            }
+            else if(desicio == 2){
+                MostrarRevistes();
+                item = prompt("Quin item vols alquilar");
+                alquilar = Revistes[item - 1 ];
+            }
+            else if(desicio == 3){
+                MostrarPelis();
+                item = prompt("Quin item vols alquilar");
+                alquilar = Pelis[item - 1 ];
+            }
+            else
+                console.log("Numero no valid");
+
+            PrestarServici(alquilar, nomsoci);
+            break;
+
+        case 7:
+        let socinom = ComprobarSoci();
+        MostrarLlibres();
+        let Devolver = prompt("Quin llibre vols tornar");
+        TornarLlibre(socinom, Llibres[Devolver - 1]);
+        break;
+
+        case 8:
+
+
+        case 9:
+            MostrarSocis();
+            break;
+
+        case 10:
+            MostrarAdmins();
+            break;
+
+        case 11:
+            let recursossoci = ComprobarSoci();
+            MostrarRecursosSoci(recursossoci);
+            break;
+
+        case 12:
+            console.log("Final");
+            break;
+
+        default:
+            console.log("Opcion no valida");
+            break;
     }
 }while(opcio != 12)
 
@@ -74,13 +145,31 @@ function TornarLlibre(l, s){
     }
 }
 
-function MostrarSocis(socis){
+function MostrarLlibres(){
+    for(let i = 0; i< Llibres.lenght; i++){
+        console.log(Llibres[i]);
+    }
+}
+
+function MostrarRevistes(){
+    for(let i = 0; i< Revistes.lenght; i++){
+        console.log(Revistes[i]);
+    }
+}
+
+function MostrarPelis(){
+    for(let i = 0; i< Pelis.lenght; i++){
+        console.log(Pelis[i]);
+    }
+}
+
+function MostrarSocis(){
     for(let i = 0; i< socis.lenght; i++){
         console.log(socis[i]);
     }
 }
 
-function MostrarAdmins(admins){
+function MostrarAdmins(){
     for(let i = 0; i<admins.lenght; i++){
         console.log(admins[i]);
     }
@@ -90,4 +179,17 @@ function MostrarRecursosSoci(soci){
     for(let i = 0; i< soci.llista.lenght; i++){
         console.log(soci.llista[i]);
     }
+}
+
+function ComprobarSoci(){
+    let dniso = prompt("Dime tu dni");
+
+    for(let i = 0; i<Socis.length; i++){
+                if(dni = Socis[i].dni){
+                    nomsoci = Socis[i];
+                    return nomsoci;
+                }
+                else
+                    console.log("No estas registrado")
+            }
 }
