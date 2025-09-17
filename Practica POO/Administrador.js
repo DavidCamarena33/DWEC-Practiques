@@ -3,4 +3,12 @@ export class Administrador extends Persones{
         super(nom, dni);
         this.carrec = carrec;
     }
+
+    CrearAdmin(){
+        let nom = prompt("Dime el nom del admin");
+        let dni = prompt("Dime el DNI");
+        let carrec = prompt("Dime el carrec");
+
+        return new AdministradorCreat(nom, dni, carrec);
+    }
 }

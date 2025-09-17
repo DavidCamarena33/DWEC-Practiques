@@ -4,18 +4,45 @@ import { Revista } from "./Revista";
 import { Soci } from "./Soci";
 import { Administrador } from "./Administrador";
 
+let opcio;
+let Llibres = [];
 
-const llibre1 = new Llibre("El Quijote", "Miguel de Cervantes", 5);
-const pel·licula1 = new Pel·licula("Eduardo Manostijeras", "Tim Burton","Drama", 10);
-const revista1 = new Revista("Telediario", "12-03-2025", 19);
-const soci1 = new Soci("Billy", "12345678V");
-const admin1 = new Administrador("Juan", "12345677M", "administrador");
+do{
+    console.log("Menu");
+    console.log("1. Anyadir un llibre");
+    console.log("2. Anyadir una revista");
+    console.log("3. Anyadir una pel·licula");
+    console.log("4. Anyadir un soci");
+    console.log("5. Anyadir un admin");
+    console.log("6. Prestar servici");
+    console.log("7. Tornar un llibre");
+    console.log("8. Llista de recursos");
+    console.log("9. Llista de socis");
+    console.log("10. Llista de admins");
+    console.log("11. Llista de recursos de un soci");
+    console.log("12. Eixir");
+    opcio = prompt("Quina opcio vols fer");
 
-let socis = [];
-soci1.push(socis);
+    switch(opcio){
+        case 1:
+            let LlibreCreat = CrearLlibre();
+            break;
 
-let admins = [];
-admin1.push(admins);
+        case 2:
+            CrearRevista();
+            break;
+
+        case 3:
+            CrearPeli();
+            break;
+
+        case 4:
+            CrearSoci();
+            break;
+
+        case 5:
+    }
+}while(opcio != 12)
 
 
 function PrestarServici(m, s){
