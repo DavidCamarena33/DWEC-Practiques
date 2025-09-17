@@ -11,6 +11,12 @@ const revista1 = new Revista("Telediario", "12-03-2025", 19);
 const soci1 = new Soci("Billy", "12345678V");
 const admin1 = new Administrador("Juan", "12345677M", "administrador");
 
+let socis = [];
+soci1.push(socis);
+
+let admins = [];
+admin1.push(admins);
+
 
 function PrestarServici(m, s){
     let dispo = false;
@@ -18,7 +24,7 @@ function PrestarServici(m, s){
         console.log("No hi han existencies");
     }
     else 
-        console.log("Hi han existencies. Queden : ",m.dismponibles-1);
+        console.log("Hi han existencies. Queden : ",m.disponibles-1);
         dispo = true;
 
 
@@ -33,7 +39,28 @@ function PrestarServici(m, s){
 function TornarLlibre(l, s){
     for(let i = 0; i < s.llista.lenght; i++){
         if(s.llista[i] == l){
-            
+            s.llista.filter(x => x == s.llista[i]);
+            l.disponibles + 1;
         }
+        else
+            console.log("El llibre no esta en la teua llista");
+    }
+}
+
+function MostrarSocis(socis){
+    for(let i = 0; i< socis.lenght; i++){
+        console.log(socis[i]);
+    }
+}
+
+function MostrarAdmins(admins){
+    for(let i = 0; i<admins.lenght; i++){
+        console.log(admins[i]);
+    }
+}
+
+function MostrarRecursosSoci(soci){
+    for(let i = 0; i< soci.llista.lenght; i++){
+        console.log(soci.llista[i]);
     }
 }
