@@ -1,3 +1,5 @@
+import { Material } from "./Material.js";
+
 export class Pel·licula extends Material{
     constructor(titol, director, genere, disponibles){
         super(titol, disponibles);

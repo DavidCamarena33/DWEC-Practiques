@@ -3,6 +3,15 @@ import { Pel·licula } from "./Pel·licula.js";
 import { Revista } from "./Revista.js";
 import { Soci } from "./Soci.js";
 import { Administrador } from "./Administrador.js";
+import { Material } from "./Material.js";
+import { Persones } from "./Persones.js";
+import readline from "readline";
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 
 let opcio;
 let Llibres = [];
@@ -25,7 +34,7 @@ do{
     console.log("10. Llista de admins");
     console.log("11. Llista de recursos de un soci");
     console.log("12. Eixir");
-    opcio = prompt("Quina opcio vols fer");
+    rl.question("Que opcio vols fer?", (numero) => opcio = numero);
 
     switch(opcio){
         case 1:
