@@ -34,7 +34,7 @@ do{
     console.log("10. Llista de admins");
     console.log("11. Llista de recursos de un soci");
     console.log("12. Eixir");
-    rl.question("Que opcio vols fer?", (numero) => opcio = numero);
+    rl.question("Que opcio vols fer?", (opcio));
 
     switch(opcio){
         case 1:
@@ -117,6 +117,8 @@ do{
         case 12:
             console.log("Final");
             break;
+
+
 
         default:
             console.log("Opcion no valida");
