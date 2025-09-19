@@ -80,13 +80,13 @@ async function Menu(){
             let nomsoci = ComprobarSoci(dniso);
 
             console.log(" 1. Llibre / 2. Revista / 3. Pel·licula");
-            let desicio = prompt("Que vols alquilar?");
+            let desicio = await pregunta("Que vols alquilar?");
             let alquilar;
             let item;
 
             if(desicio == 1){
                 MostrarLlibres();
-                item = prompt("Quin item vols alquilar");
+                item = await pregunta("Quin item vols alquilar");
                 alquilar = Llibres[item - 1 ];
             }
             else if(desicio == 2){
