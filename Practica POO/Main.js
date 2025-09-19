@@ -14,7 +14,11 @@ const rl = readline.createInterface({
 });
 
 function preguntar(pregunta){
-    return new Promise(resolve => rl.question(pregunta + ' ', r =>resolve(r.trim())));
+    return new Promise(
+        resolve => rl.question(
+            pregunta + ' ', 
+            r =>resolve(r.trim()))
+    );
 }
 
 let opcio;
@@ -25,7 +29,7 @@ let Socis = [];
 let Admins = [];
 
 do{
-    Menu();
+    await Menu();
 
 }while(opcio != '12')
 
