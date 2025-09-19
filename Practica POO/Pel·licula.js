@@ -1,4 +1,14 @@
 import { Material } from "./Material.js";
+import readline from "readline";
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+function preguntar(pregunta){
+    return new Promise(resolve => rl.question(pregunta + ' ', r =>resolve(r.trim())));
+}
 
 export class Pel·licula extends Material{
     constructor(titol, director, genere, disponibles){
@@ -7,11 +17,11 @@ export class Pel·licula extends Material{
         this.genere = genere;
     }
 
-    CrearPeli(){
-        let titol = prompt("Dime el titol de la pelicula");
-        let director = prompt("Dime el nom del director");
-        let genere = prompt("Dime el genere")
-        let disponibles = prompt("Dime la cantidad disponible");
+    async CrearPeli(){
+        let titol = await preguntar("Dime el titol");
+        let director = await preguntar("Dime el director");
+        let genere = await preguntar("Dime el genere");
+        let disponibles = await preguntar("Dime la cantitat disponible");
 
         return new Pel·liculaCreada(titol, director, genere, disponibles);
     }

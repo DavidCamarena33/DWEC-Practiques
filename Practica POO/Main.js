@@ -6,12 +6,16 @@ import { Administrador } from "./Administrador.js";
 import { Material } from "./Material.js";
 import { Persones } from "./Persones.js";
 import readline from "readline";
+import { resolve } from "path";
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
+function preguntar(pregunta){
+    return new Promise(resolve => rl.question(pregunta + ' ', r =>resolve(r.trim())));
+}
 
 let opcio;
 let Llibres = [];
@@ -21,6 +25,11 @@ let Socis = [];
 let Admins = [];
 
 do{
+    Menu();
+
+}while(opcio != '12')
+
+async function Menu(){
     console.log("Menu");
     console.log("1. Anyadir un llibre");
     console.log("2. Anyadir una revista");
@@ -34,35 +43,36 @@ do{
     console.log("10. Llista de admins");
     console.log("11. Llista de recursos de un soci");
     console.log("12. Eixir");
-    rl.question("Que opcio vols fer?", (opcio));
+    opcio = await preguntar("Que opcio vols fer");
 
     switch(opcio){
-        case 1:
+
+        case '1':
             let LlibreCreat = CrearLlibre();
             LlibreCreat.psuh(Llibres);
             break;
 
-        case 2:
+        case '2':
             let RevistaCrada = CrearRevista();
             RevistaCrada.push(Revistes);
             break;
 
-        case 3:
+        case '3':
             let PeliCreada = CrearPeli();
             PeliCreada.push(Pelis);
             break;
 
-        case 4:
+        case '4':
             let SociCreat = CrearSoci();
             SociCreat.push(Socis);
             break;
 
-        case 5:
+        case '5':
             let AdminCreat = CrearAdmin();
             AdminCreat.push(Admins);
             break;
 
-        case 6:
+        case '6':
             let nomsoci = ComprobarSoci(dniso);
 
             console.log(" 1. Llibre / 2. Revista / 3. Pel·licula");
@@ -77,12 +87,12 @@ do{
             }
             else if(desicio == 2){
                 MostrarRevistes();
-                item = prompt("Quin item vols alquilar");
+                item = await pregunta("Quin item vols alquilar");
                 alquilar = Revistes[item - 1 ];
             }
             else if(desicio == 3){
                 MostrarPelis();
-                item = prompt("Quin item vols alquilar");
+                item = await pregunta("Quin item vols alquilar");
                 alquilar = Pelis[item - 1 ];
             }
             else
@@ -91,40 +101,42 @@ do{
             PrestarServici(alquilar, nomsoci);
             break;
 
-        case 7:
+        case '7':
         let socinom = ComprobarSoci();
-        MostrarLlibres();
-        let Devolver = prompt("Quin llibre vols tornar");
-        TornarLlibre(socinom, Llibres[Devolver - 1]);
+        for(let i = 0; i < socinom.llista.lenght; i ++){
+            console.log(llista[i] + " ");
+        }
+        let Devolver = await pregunta("Quin llibre vols tornar");
+        TornarLlibre(socinom, socinom.llista[Devolver - 1]);
         break;
 
-        case 8:
+        case '8':
 
 
-        case 9:
+        case '9':
             MostrarSocis();
             break;
 
-        case 10:
+        case '10':
             MostrarAdmins();
             break;
 
-        case 11:
+        case '11':
             let recursossoci = ComprobarSoci();
             MostrarRecursosSoci(recursossoci);
             break;
 
-        case 12:
+        case '12':
             console.log("Final");
             break;
-
 
 
         default:
             console.log("Opcion no valida");
             break;
     }
-}while(opcio != 12)
+}
+
 
 
 function PrestarServici(m, s){
@@ -148,7 +160,7 @@ function PrestarServici(m, s){
 function TornarLlibre(l, s){
     for(let i = 0; i < s.llista.lenght; i++){
         if(s.llista[i] == l){
-            s.llista.filter(x => x == s.llista[i]);
+            s.llista.filter(x => x !== s.llista[i]);
             l.disponibles + 1;
         }
         else
@@ -158,42 +170,42 @@ function TornarLlibre(l, s){
 
 function MostrarLlibres(){
     for(let i = 0; i< Llibres.lenght; i++){
-        console.log(Llibres[i]);
+        console.log(Llibres[i] + " ");
     }
 }
 
 function MostrarRevistes(){
     for(let i = 0; i< Revistes.lenght; i++){
-        console.log(Revistes[i]);
+        console.log(Revistes[i] + " ");
     }
 }
 
 function MostrarPelis(){
     for(let i = 0; i< Pelis.lenght; i++){
-        console.log(Pelis[i]);
+        console.log(Pelis[i] + " ");
     }
 }
 
 function MostrarSocis(){
-    for(let i = 0; i< socis.lenght; i++){
-        console.log(socis[i]);
+    for(let i = 0; i< Socis.lenght; i++){
+        console.log(Socis[i] + " ");
     }
 }
 
 function MostrarAdmins(){
-    for(let i = 0; i<admins.lenght; i++){
-        console.log(admins[i]);
+    for(let i = 0; i<Admins.lenght; i++){
+        console.log(Admins[i] + " ");
     }
 }
 
 function MostrarRecursosSoci(soci){
     for(let i = 0; i< soci.llista.lenght; i++){
-        console.log(soci.llista[i]);
+        console.log(soci.llista[i] + " ");
     }
 }
 
-function ComprobarSoci(){
-    let dniso = prompt("Dime tu dni");
+async function ComprobarSoci(){
+    let dni = await pregunta("Dime tu dni");
 
     for(let i = 0; i<Socis.length; i++){
                 if(dni = Socis[i].dni){
