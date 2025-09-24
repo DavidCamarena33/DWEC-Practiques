@@ -3,4 +3,9 @@ export class Persones{
         this.nom = nom;
         this.dni = dni;
     }
+
+    toString() {
+    return `${this.nom} (DNI: ${this.dni})`;
+  }
+  
 }

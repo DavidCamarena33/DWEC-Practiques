@@ -7,5 +7,8 @@ export class Pelicula extends Material{
         this.genere = genere;
     }
 
+    toString() {
+    return `${super.toString()} - Director: ${this.director}, Gènere: ${this.genere}`;
+  }
 
 }

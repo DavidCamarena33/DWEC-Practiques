@@ -7,5 +7,8 @@ export class Revista extends Material{
         this.data = data;
     }
     
+    toString() {
+    return `${super.toString()} - Data: ${this.data}`;
+  }
     
 }

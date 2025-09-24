@@ -22,7 +22,7 @@ create table persones(
     biblioteca varchar(30),
     nom varchar(30),
     dni int,
-    primary key(nom, dni),
+    primary key(nom, dni, biblioteca),
     Foreign Key (biblioteca) REFERENCES biblioteca(nom)
 );
 

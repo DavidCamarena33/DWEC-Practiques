@@ -99,7 +99,7 @@ async function Menu() {
 
     case "7":
       let socinom = await ComprobarSoci();
-      for (let i = 0; i < socinom.llista.lenght; i++) {
+      for (let i = 0; i < socinom.llista.length; i++) {
         console.log(llista[i] + " ");
       }
       let Devolver = await preguntar("Quin llibre vols tornar");
@@ -138,7 +138,7 @@ function PrestarServici(m, s) {
   } else console.log("Hi han existencies. Queden : ", m.disponibles -= 1);
   dispo = true;
 
-  if (s.llista.lenght < 3 && dispo == true) {
+  if (s.llista.length < 3 && dispo == true) {
     m.disponibles - 1;
     m.push(s.llista);
   } else console.log("Has superat el llimit");
@@ -157,37 +157,37 @@ function TornarLlibre(s, l) {
 
 
 function MostrarLlibres() {
-  for (let i = 0; i < Llibres.lenght; i++) {
+  for (let i = 0; i < Llibres.length; i++) {
     console.log(Llibres[i] + " ");
   }
 }
 
 function MostrarRevistes() {
-  for (let i = 0; i < Revistes.lenght; i++) {
+  for (let i = 0; i < Revistes.length; i++) {
     console.log(Revistes[i] + " ");
   }
 }
 
 function MostrarPelis() {
-  for (let i = 0; i < Pelis.lenght; i++) {
+  for (let i = 0; i < Pelis.length; i++) {
     console.log(Pelis[i] + " ");
   }
 }
 
 function MostrarSocis() {
-  for (let i = 0; i < Socis.lenght; i++) {
+  for (let i = 0; i < Socis.length; i++) {
     console.log(Socis[i] + " ");
   }
 }
 
 function MostrarAdmins() {
-  for (let i = 0; i < Admins.lenght; i++) {
+  for (let i = 0; i < Admins.length; i++) {
     console.log(Admins[i] + " ");
   }
 }
 
 function MostrarRecursosSoci(soci) {
-  for (let i = 0; i < soci.llista.lenght; i++) {
+  for (let i = 0; i < soci.llista.length; i++) {
     console.log(soci.llista[i] + " ");
   }
 }

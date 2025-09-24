@@ -6,4 +6,8 @@ export class Administrador extends Persones{
         this.carrec = carrec;
     }
 
+    toString() {
+    return `${super.toString()} - Administrador (${this.carrec})`;
+  }
+
 }

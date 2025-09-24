@@ -6,5 +6,8 @@ export class Soci extends Persones{
         this.llista = [];
     }
 
+    toString() {
+    return `${super.toString()} - Soci amb ${this.llista.length} recursos prestats`;
+  }
 
 }

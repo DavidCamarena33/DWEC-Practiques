@@ -3,4 +3,9 @@ export class Material{
         this.titol = titol;
         this.disponibles = disponibles;
     }
+
+     toString() {
+    return `${this.titol} (Disponibles: ${this.disponibles})`;
+  }
+
 }

@@ -6,5 +6,8 @@ export class Llibre extends Material{
         this.autor = autor;
     }
 
+     toString() {
+    return `${super.toString()} - Autor: ${this.autor}`;
+  }
 
 }
