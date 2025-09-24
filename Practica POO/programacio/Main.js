@@ -80,15 +80,15 @@ async function Menu() {
       let alquilar;
       let item;
 
-      if (desicio == 1) {
+      if (desicio === '1') {
         MostrarLlibres();
         item = await preguntar("Quin item vols alquilar");
         alquilar = Llibres[item - 1];
-      } else if (desicio == 2) {
+      } else if (desicio === '2') {
         MostrarRevistes();
         item = await preguntar("Quin item vols alquilar");
         alquilar = Revistes[item - 1];
-      } else if (desicio == 3) {
+      } else if (desicio === '3') {
         MostrarPelis();
         item = await preguntar("Quin item vols alquilar");
         alquilar = Pelis[item - 1];
