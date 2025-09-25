@@ -158,37 +158,37 @@ function TornarLlibre(s, l) {
 
 function MostrarLlibres() {
   for (let i = 0; i < Llibres.length; i++) {
-    console.log(Llibres[i] + " ");
+    console.log((i+1)+"."+Llibres[i] + " ");
   }
 }
 
 function MostrarRevistes() {
   for (let i = 0; i < Revistes.length; i++) {
-    console.log(Revistes[i] + " ");
+    console.log((i+1)+"."+Revistes[i] + " ");
   }
 }
 
 function MostrarPelis() {
   for (let i = 0; i < Pelis.length; i++) {
-    console.log(Pelis[i] + " ");
+    console.log((i+1)+"."+Pelis[i] + " ");
   }
 }
 
 function MostrarSocis() {
   for (let i = 0; i < Socis.length; i++) {
-    console.log(Socis[i] + " ");
+    console.log((i+1)+"."+Socis[i] + " ");
   }
 }
 
 function MostrarAdmins() {
   for (let i = 0; i < Admins.length; i++) {
-    console.log(Admins[i] + " ");
+    console.log((i+1)+"."+Admins[i] + " ");
   }
 }
 
 function MostrarRecursosSoci(soci) {
   for (let i = 0; i < soci.llista.length; i++) {
-    console.log(soci.llista[i] + " ");
+    console.log((i+1)+"."+soci.llista[i] + " ");
   }
 }
 
