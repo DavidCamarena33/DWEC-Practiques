@@ -1,75 +1,76 @@
-drop database if EXISTS bibliotecagen;
-create database if not EXISTS bibliotecagen;
+DROP DATABASE IF EXISTS bibliotecagen;
+CREATE DATABASE IF NOT EXISTS bibliotecagen;
+USE bibliotecagen;
 
-
-use bibliotecagen;
-
-create table biblioteca (
-    nom VARCHAR(30) not null,
-    poble VARCHAR(32),
-    primary key (nom)
+CREATE TABLE biblioteca (
+    id_biblioteca INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL,
+    poble VARCHAR(50)
 );
 
-drop table if exists material;
-
-create table material (
-    biblioteca varchar(30),
-    titol varchar(50),
-    disponibles int,
-    primary key (
-        titol,
-        disponibles,
-        biblioteca
-    ),
-    Foreign Key (biblioteca) REFERENCES biblioteca (nom)
+CREATE TABLE tiporecursos (
+    id_recurs INT AUTO_INCREMENT PRIMARY KEY,
+    tipus VARCHAR(30) UNIQUE NOT NULL
 );
 
-create table persones (
-    biblioteca varchar(30),
-    nom varchar(30),
-    dni int,
-    primary key (nom, dni, biblioteca),
-    Foreign Key (biblioteca) REFERENCES biblioteca (nom)
+CREATE TABLE recursos (
+    id_recurso INT AUTO_INCREMENT PRIMARY KEY,
+    id_biblioteca INT NOT NULL,
+    titol VARCHAR(100) NOT NULL,
+    disponibles INT DEFAULT 0,
+    id_tipus INT NOT NULL,
+    FOREIGN KEY (id_biblioteca) REFERENCES biblioteca(id_biblioteca),
+    FOREIGN KEY (id_tipus) REFERENCES tiporecursos(id_recurs)
 );
 
-create table llibre (
-    autor varchar(40),
-    titol varchar(50),
-    disponibles int,
-    Foreign Key (titol, disponibles) REFERENCES material (titol, disponibles),
-    primary key (titol, disponibles)
+CREATE TABLE persones (
+    id_persona INT AUTO_INCREMENT PRIMARY KEY,
+    id_biblioteca INT NOT NULL,
+    nom VARCHAR(50) NOT NULL,
+    dni VARCHAR(15) UNIQUE NOT NULL,
+    tipus ENUM("soci","administrador") NOT NULL,
+    FOREIGN KEY (id_biblioteca) REFERENCES biblioteca(id_biblioteca)
 );
 
-create table revista (
-    titol varchar(50),
-    autor varchar(40),
-    fecha date,
-    disponibles int,
-    Foreign Key (titol, disponibles) REFERENCES material (titol, disponibles),
-    primary key (titol, disponibles)
+CREATE TABLE llibre (
+    id_llibre INT PRIMARY KEY,
+    autor VARCHAR(100),
+    FOREIGN KEY (id_llibre) REFERENCES recursos(id_recurso)
 );
 
-create table peli (
-    titol varchar(40),
-    director varchar(40),
-    genere varchar(20),
-    disponibles int,
-    Foreign Key (titol, disponibles) REFERENCES material (titol, disponibles),
-    primary key (titol, disponibles)
+CREATE TABLE revista (
+    id_revista INT PRIMARY KEY,
+    autor VARCHAR(100),
+    fecha DATE,
+    FOREIGN KEY (id_revista) REFERENCES recursos(id_recurso)
 );
 
-create table soci (
-    nom varchar(30),
-    dni int,
-    recursos JSON,
-    Foreign Key (nom, dni) REFERENCES persones (nom, dni),
-    primary key (nom, dni)
+CREATE TABLE peli (
+    id_peli INT PRIMARY KEY,
+    director VARCHAR(100),
+    genere VARCHAR(50),
+    FOREIGN KEY (id_peli) REFERENCES recursos(id_recurso)
 );
 
-create table admins (
-    nom varchar(30),
-    dni int,
-    carrec varchar(30),
-    Foreign Key (nom, dni) REFERENCES persones (nom, dni),
-    primary key (nom, dni)
+CREATE TABLE soci (
+    id_persona INT PRIMARY KEY,
+    FOREIGN KEY (id_persona) REFERENCES persones(id_persona)
+);
+
+CREATE TABLE admins (
+    id_persona INT PRIMARY KEY,
+    carrec VARCHAR(50),
+    FOREIGN KEY (id_persona) REFERENCES persones(id_persona)
+);
+
+
+CREATE TABLE prestec(
+    id_prestec INT AUTO_INCREMENT PRIMARY KEY,
+    id_persona INT NOT NULL,
+    id_recurso INT NOT NULL,
+    data_prestec DATE NOT NULL,
+    data_devolver DATE,
+    devuelto BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (id_persona) REFERENCES persones(id_persona),
+    FOREIGN KEY (id_recurso) REFERENCES recursos(id_recurso)
 );
