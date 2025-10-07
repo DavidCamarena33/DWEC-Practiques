@@ -74,3 +74,12 @@ CREATE TABLE prestec(
     FOREIGN KEY (id_persona) REFERENCES persones(id_persona),
     FOREIGN KEY (id_recurso) REFERENCES recursos(id_recurso)
 );
+
+create view prestecssoci as
+select s.id, r.titol, p.data_prestec
+from prestec p
+join recursos r on p.id_recurso = r.id
+join persones pe on p.id_persona = pe.id
+where p.data_devolver is null;
+
+
