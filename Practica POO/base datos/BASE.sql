@@ -63,19 +63,47 @@ CREATE TABLE admins (
     FOREIGN KEY (id_persona) REFERENCES persones(id_persona)
 );
 
-create table soci (
-    nom varchar(30),
-    dni int,
-    recursos JSON,
-    Foreign Key (nom, dni) REFERENCES persones (nom, dni),
-    primary key (nom, dni)
+
+CREATE TABLE prestec(
+    id_prestec INT AUTO_INCREMENT PRIMARY KEY,
+    id_persona INT NOT NULL,
+    id_recurso INT NOT NULL,
+    data_prestec DATE NOT NULL,
+    data_devolver DATE,
+    devuelto BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (id_persona) REFERENCES persones(id_persona),
+    FOREIGN KEY (id_recurso) REFERENCES recursos(id_recurso)
 );
 
-create table admins (
-    nom varchar(30),
-    dni int,
-    carrec varchar(30),
-    Foreign Key (nom, dni) REFERENCES persones (nom, dni),
-    primary key (nom, dni)
-);
+INSERT INTO biblioteca (nom, poble)
+VALUES 
+  ('Biblioteca Central', 'València'),
+  ('Biblioteca Nord', 'Castelló');
 
+INSERT INTO tiporecursos (tipus)
+VALUES 
+  ('llibre'),
+  ('revista'),
+  ('peli');
+
+INSERT INTO recursos (id_biblioteca, titol, disponibles, id_tipus)
+VALUES 
+  (1, 'El Senyor dels Anells', 3, 1),   
+  (1, 'National Geographic - Octubre', 5, 2), 
+  (2, 'Inception', 2, 3);               
+
+INSERT INTO persones (id_biblioteca, nom, dni, tipus)
+VALUES 
+  (1, 'Anna Soci', '12345678A', 'soci'),
+  (1, 'Pere Admin', '87654321B', 'administrador'),
+  (2, 'Laura Soci', '11112222C', 'soci');
+
+INSERT INTO soci (id_persona) VALUES (1), (3);
+INSERT INTO admins (id_persona, carrec) VALUES (2, 'Director');
+
+create view prestecssoci as
+select s.id, r.titol, p.data_prestec
+from prestec p
+join recursos r on p.id_recurso = r.id
+join persones pe on p.id_persona = pe.id
+where p.data_devolver is null;
