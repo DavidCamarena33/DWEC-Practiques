@@ -102,7 +102,7 @@ INSERT INTO soci (id_persona) VALUES (1), (3);
 INSERT INTO admins (id_persona, carrec) VALUES (2, 'Director');
 
 create view prestecssoci as
-select s.id, r.titol, p.data_prestec
+select pe.id, r.titol, p.data_prestec
 from prestec p
 join recursos r on p.id_recurso = r.id
 join persones pe on p.id_persona = pe.id
