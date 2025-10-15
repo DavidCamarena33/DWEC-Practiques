@@ -8,9 +8,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
-app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
-});
+
 
 app.get('/revista', (req, res) => {
   const sql = `
@@ -26,4 +24,36 @@ app.get('/revista', (req, res) => {
   });
 });
 
+app.get('/llibre', (req, res) => {
+  const sql = `
+    SELECT r.id_recurso, r.titol, l.autor , r.disponibles
+    FROM recursos r
+    JOIN llibre l ON r.id_recurso = l.id_llibre
+  `;
+
+  con.query(sql, (err, results) => {
+    if (err) return res.status(500).send(err);
+
+    res.json(results); 
+  });
+});
+
+app.get('/pelicula', (req, res) => {
+  const sql = `
+    SELECT r.id_recurso, r.titol, p.director, p.genere, r.disponibles
+    FROM recursos r
+    JOIN peli p ON r.id_recurso = p.id_peli
+  `;
+
+  con.query(sql, (err, results) => {
+    if (err) return res.status(500).send(err);
+
+    res.json(results); 
+  });
+});
+
+
+app.listen(port, () => {
+  console.log(`Servidor escuchando en http://localhost:${port}`);
+});
 
