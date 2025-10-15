@@ -100,10 +100,80 @@ VALUES
 
 INSERT INTO soci (id_persona) VALUES (1), (3);
 INSERT INTO admins (id_persona, carrec) VALUES (2, 'Director');
+INSERT INTO revista (id_revista, autor, fecha) VALUES (2, 'National Geographic', '2025-10-01');
 
 create view prestecssoci as
-select pe.id, r.titol, p.data_prestec
+select s.id_persona, r.titol, p.data_prestec
 from prestec p
-join recursos r on p.id_recurso = r.id
-join persones pe on p.id_persona = pe.id
+join recursos r on p.id_recurso = r.id_recurso
+join persones s on p.id_persona = s.id_persona
 where p.data_devolver is null;
+
+create view recursos_agotados as
+select id_recurso, id_tipus, disponibles
+from recursos
+where disponiles = 0;
+
+
+DELIMITER &&
+
+-- comprobe antes de insertar un prestec si el recurs
+-- esta disponible i si no ho esta el error para la insercio
+
+CREATE TRIGGER validar_prestec
+BEFORE INSERT ON prestec -- antes de fer el update i la insercio de prestec
+FOR EACH ROW             -- comproba si es posible
+BEGIN
+    DECLARE ejemplares INT;
+
+    SELECT disponibles INTO ejemplares
+    FROM recursos
+    WHERE id_recurso = NEW.id_recurso;
+
+    IF ejemplares <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No hay ejemplares disponibles para este recurso';
+    END IF;
+END &&
+
+DELIMITER ;
+
+
+-- Açi fem que si el trigger anterior no ha donat error que 
+-- la insercio es puga fer i es reste el disponible
+
+DELIMITER &&
+
+CREATE TRIGGER fer_prestec
+AFTER INSERT ON prestec -- despues de insertar en la tabla fa el update
+FOR EACH ROW
+BEGIN
+    UPDATE recursos
+    SET disponibles = disponibles - 1
+    WHERE id_recurso = NEW.id_recurso;
+END &&
+
+DELIMITER ;
+
+DELIMITER &&
+
+-- este trigger es per a caun tornes un recurs que els disponibles
+-- se li sume uno
+
+CREATE TRIGGER tornar_recurs
+AFTER UPDATE ON prestec -- despues del update comproba les feches          
+FOR EACH ROW            -- i li suma uno al tornar
+BEGIN
+    IF OLD.data_devolver IS NULL AND NEW.data_devolver IS NOT NULL THEN
+    -- Açi comprobem que la fecha de tornar antigua estaba a null y que la nova
+    -- no esta a null per a poder confirmar la devolucio
+        UPDATE recursos
+        SET disponibles = disponibles + 1
+        WHERE id_recurso = NEW.id_recurso;
+    END IF;
+END &&
+
+DELIMITER ;
+
+
+
