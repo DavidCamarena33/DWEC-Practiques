@@ -112,7 +112,7 @@ where p.data_devolver is null;
 create view recursos_agotados as
 select id_recurso, id_tipus, disponibles
 from recursos
-where disponiles = 0;
+where disponibles = 0;
 
 
 DELIMITER &&
