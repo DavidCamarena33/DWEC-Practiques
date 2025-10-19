@@ -193,4 +193,10 @@ INSERT INTO admins (id_persona, carrec) VALUES
 (2, 'Director General'),
 (4, 'Subdirector');
 
+INSERT INTO prestec (id_persona, id_recurso, data_prestec)
+VALUES (1, 1, '2025-10-19');
+
+INSERT INTO prestec (id_persona, id_recurso, data_prestec)
+VALUES (3, 5, '2025-10-19');
+
 

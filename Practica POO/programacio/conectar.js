@@ -1,4 +1,5 @@
 let mysql = require('mysql2');
+// import mysql from "mysql2/promise";
 
 let con = mysql.createConnection({
   host: "localhost",
