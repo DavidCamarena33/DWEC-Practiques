@@ -8,8 +8,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
-
-
 app.get('/revista', (req, res) => {
   const sql = `
     SELECT r.id_recurso, r.titol, re.autor, re.fecha, r.disponibles
@@ -52,6 +50,45 @@ app.get('/pelicula', (req, res) => {
   });
 });
 
+app.get('/admin', (req, res) => {
+  const sql = `
+    SELECT p.id_persona, p.nom, p.dni, a.carrec
+    FROM persones p
+    JOIN admins a ON p.id_persona = a.id_persona
+  `;
+
+  con.query(sql, (err, results) => {
+    if (err) return res.status(500).send(err);
+
+    res.json(results); 
+  });
+});
+
+app.get('/recursos', (req, res) => {
+  const sql = `
+    select *
+    from recursos
+  `;
+
+  con.query(sql, (err, results) => {
+    if (err) return res.status(500).send(err);
+
+    res.json(results); 
+  });
+});
+
+app.get('/persones', (req, res) => {
+  const sql = `
+    select *
+    from persones
+  `;
+
+  con.query(sql, (err, results) => {
+    if (err) return res.status(500).send(err);
+
+    res.json(results); 
+  }); 
+});
 
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
