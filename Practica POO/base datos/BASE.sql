@@ -75,33 +75,6 @@ CREATE TABLE prestec(
     FOREIGN KEY (id_recurso) REFERENCES recursos(id_recurso)
 );
 
-INSERT INTO biblioteca (nom, poble)
-VALUES 
-  ('Biblioteca Central', 'València'),
-  ('Biblioteca Nord', 'Castelló');
-
-INSERT INTO tiporecursos (tipus)
-VALUES 
-  ('llibre'),
-  ('revista'),
-  ('peli');
-
-INSERT INTO recursos (id_biblioteca, titol, disponibles, id_tipus)
-VALUES 
-  (1, 'El Senyor dels Anells', 3, 1),   
-  (1, 'National Geographic - Octubre', 5, 2), 
-  (2, 'Inception', 2, 3);               
-
-INSERT INTO persones (id_biblioteca, nom, dni, tipus)
-VALUES 
-  (1, 'Anna Soci', '12345678A', 'soci'),
-  (1, 'Pere Admin', '87654321B', 'administrador'),
-  (2, 'Laura Soci', '11112222C', 'soci');
-
-INSERT INTO soci (id_persona) VALUES (1), (3);
-INSERT INTO admins (id_persona, carrec) VALUES (2, 'Director');
-INSERT INTO revista (id_revista, autor, fecha) VALUES (2, 'National Geographic', '2025-10-01');
-
 create view prestecssoci as
 select s.id_persona, r.titol, p.data_prestec
 from prestec p
@@ -175,5 +148,55 @@ END &&
 
 DELIMITER ;
 
+
+
+INSERT INTO biblioteca (nom, poble) VALUES
+('Biblioteca Central', 'València'),
+('Biblioteca del Mar', 'Alicante');
+
+INSERT INTO tiporecursos (tipus) VALUES
+('Llibre'),
+('Revista'),
+('Peli');
+
+INSERT INTO recursos (id_biblioteca, titol, disponibles, id_tipus) VALUES
+(1, 'El senyor dels anells', 3, 1),    
+(1, 'Cien años de soledad', 2, 1),     
+(1, 'National Geographic - Octubre', 2, 2),
+(2, 'Ciencia Hoy - Septiembre', 1, 2),  
+(2, 'Inception', 1, 3),                 
+(2, 'Gladiator', 2, 3);                 
+
+INSERT INTO persones (id_biblioteca, nom, dni, tipus) VALUES
+(1, 'Laura Gómez', '12345678A', 'soci'),
+(1, 'Pere Martí', '87654321B', 'administrador'),
+(2, 'Marta Ferrer', '45678912C', 'soci'),
+(2, 'Joan Serra', '78912345D', 'administrador');
+
+INSERT INTO llibre (id_llibre, autor) VALUES
+(1, 'J.R.R. Tolkien'),
+(2, 'Gabriel García Márquez');
+
+INSERT INTO revista (id_revista, autor, fecha) VALUES
+(3, 'Redacción NG', '2025-10-01'),
+(4, 'Equipo Ciencia Hoy', '2025-09-15');
+
+INSERT INTO peli (id_peli, director, genere) VALUES
+(5, 'Christopher Nolan', 'Ciencia ficción'),
+(6, 'Ridley Scott', 'Acción');
+
+INSERT INTO soci (id_persona) VALUES
+(1),
+(3);
+
+INSERT INTO admins (id_persona, carrec) VALUES
+(2, 'Director General'),
+(4, 'Subdirector');
+
+INSERT INTO prestec (id_persona, id_recurso, data_prestec)
+VALUES (1, 1, '2025-10-19');
+
+INSERT INTO prestec (id_persona, id_recurso, data_prestec)
+VALUES (3, 5, '2025-10-19');
 
 
