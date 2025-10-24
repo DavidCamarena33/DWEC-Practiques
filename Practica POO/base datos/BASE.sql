@@ -25,7 +25,7 @@ CREATE TABLE recursos (
 
 CREATE TABLE persones (
     id_persona INT AUTO_INCREMENT PRIMARY KEY,
-    id_biblioteca INT NOT NULL,
+    id_biblioteca INT,
     nom VARCHAR(50) NOT NULL,
     dni VARCHAR(15) UNIQUE NOT NULL,
     tipus ENUM("soci","administrador") NOT NULL,
@@ -33,20 +33,20 @@ CREATE TABLE persones (
 );
 
 CREATE TABLE llibre (
-    id_llibre INT PRIMARY KEY,
+    id_llibre INT PRIMARY KEY ,
     autor VARCHAR(100),
     FOREIGN KEY (id_llibre) REFERENCES recursos(id_recurso)
 );
 
 CREATE TABLE revista (
-    id_revista INT PRIMARY KEY,
+    id_revista INT PRIMARY KEY ,
     autor VARCHAR(100),
     fecha DATE,
     FOREIGN KEY (id_revista) REFERENCES recursos(id_recurso)
 );
 
 CREATE TABLE peli (
-    id_peli INT PRIMARY KEY,
+    id_peli INT PRIMARY KEY ,
     director VARCHAR(100),
     genere VARCHAR(50),
     FOREIGN KEY (id_peli) REFERENCES recursos(id_recurso)

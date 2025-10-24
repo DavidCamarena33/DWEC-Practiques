@@ -1,7 +1,7 @@
-let mysql = require('mysql2');
+import mysql from 'mysql2';
 // import mysql from "mysql2/promise";
 
-let con = mysql.createConnection({
+export const con = mysql.createConnection({
   host: "localhost",
   user: "alumno",
   password: "alumno",
@@ -12,5 +12,3 @@ con.connect(function(err) {
   if (err) throw err;
   console.log("conexion a la base completada");
 });
-
-module.exports = con;

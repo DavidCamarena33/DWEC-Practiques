@@ -1,10 +1,20 @@
 {
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mysql2": "^3.15.2"
   },
-  "devDependencies":{
-    "nodemon":"^3.1.10"
-  }
-  
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "name": "programacio",
+  "version": "1.0.0",
+  "description": "Projecte biblioteca DWEC",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "David Camarena",
+  "license": "ISC",
+  "type": "module"
 }
-
