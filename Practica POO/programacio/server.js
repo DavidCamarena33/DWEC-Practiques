@@ -305,7 +305,12 @@ app.post("/admins", async (req, res) =>{
   try{
     const { id_biblioteca, nom, dni, tipus, carrec } = req.body;
     
-    if( !id_biblioteca || !nom || !dni || !tipus || !carrec ){
+    if(tipus == "soci"){
+      const error = new Error("No es posible insertar el soci");
+      error.status = 500;
+      throw error;
+    }else{
+      if( !id_biblioteca || !nom || !dni || !tipus || !carrec ){
       const error = new Error("Falten dades");
       error.status = 400;
       throw error;
@@ -333,6 +338,7 @@ app.post("/admins", async (req, res) =>{
     }
 
     res.status(201).json({message: "Administrador insertat"});
+    }
   
   }catch (e){
     console.error("Error inesperat:", e.message);
