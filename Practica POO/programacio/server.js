@@ -334,8 +334,9 @@ app.post("/admins", async (req, res) =>{
     }
 
     res.status(201).json({message: "Administrador insertat"});
+    }
   
-  }catch (e){
+  catch (e){
     console.error("Error inesperat:", e.message);
     res.status(e.status || 500).json({ error: e.message });
   }
