@@ -1,14 +1,18 @@
-import mysql from 'mysql2';
-// import mysql from "mysql2/promise";
+import mysql from 'mysql2/promise';
 
-export const con = mysql.createConnection({
-  host: "localhost",
-  user: "alumno",
-  password: "alumno",
-  database: "bibliotecagen"
+export const con = await mysql.createPool({
+    host: "localhost",
+    user: "alumno",
+    password: "alumno",
+    database: "bibliotecagen"
 });
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("conexion a la base completada");
-});
+(async () => {
+    try {
+        const connection = await con.getConnection();
+        connection.release(); 
+        console.log("Pool de conexiones a la base de datos configurado correctamente.");
+    } catch (err) {
+        console.error("Error al verificar la conexión inicial del Pool:", err.message);
+    }
+})();

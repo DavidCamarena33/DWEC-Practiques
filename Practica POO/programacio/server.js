@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 
 app.get("/recursos", async (req, res) => {36
   try {
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "SELECT * from recursos"
     );
     res.json(rows);
@@ -25,7 +25,7 @@ app.get("/recursos", async (req, res) => {36
 
 app.get("/llibre", async (req, res) => {36
   try {
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "SELECT r.id_recurso, r.titol, l.autor , r.disponibles FROM recursos r JOIN llibre l ON r.id_recurso = l.id_llibre"
     );
     res.json(rows);
@@ -36,7 +36,7 @@ app.get("/llibre", async (req, res) => {36
 
 app.get("/revista", async (req, res) =>{
   try{
-    const [rows] =  await con.promise().query(
+    const [rows] =  await con.query(
       "select r.id_recurso, r.titol, re.autor, re.fecha, r.disponibles from recursos r join revista re on r.id_recurso = re.id_revista where r.id_tipus = 2"
     );
     res.json(rows);
@@ -47,7 +47,7 @@ app.get("/revista", async (req, res) =>{
 
 app.get("/pelicula", async (req, res) => {
   try{
-    const [rows] =  await con.promise().query(
+    const [rows] =  await con.query(
       "select r.id_recurso, r.titol, p.director, p.genere, r.disponibles from recursos r join peli p on r.id_recurso = p.id_peli"
     );
     res.json(rows);
@@ -59,7 +59,7 @@ app.get("/pelicula", async (req, res) => {
 app.get("/llibre/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "SELECT r.id_recurso, r.titol, l.autor , r.disponibles FROM recursos r JOIN llibre l ON r.id_recurso = l.id_llibre WHERE r.id_recurso = ?",
       [id]
     );
@@ -75,7 +75,7 @@ app.get("/llibre/:id", async (req, res) => {
 app.get("/revista/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "select r.id_recurso, r.titol, re.autor, re.fecha, r.disponibles from recursos r join revista re on r.id_recurso = re.id_revista WHERE r.id_recurso = ?",
       [id]
     );
@@ -91,7 +91,7 @@ app.get("/revista/:id", async (req, res) => {
 app.get("/pelicula/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "select r.id_recurso, r.titol, p.director, p.genere, r.disponibles from recursos r join peli p on r.id_recurso = p.id_peli WHERE r.id_recurso = ?",
       [id]
     );
@@ -106,7 +106,7 @@ app.get("/pelicula/:id", async (req, res) => {
 
 app.get("/persones", async (req, res) => {
   try{
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "select id_persona, nom, dni ,tipus from persones"
     );
     res.json(rows);
@@ -117,7 +117,7 @@ app.get("/persones", async (req, res) => {
 
 app.get("/soci", async (req, res) => {
   try{
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "select p.id_persona, p.nom, p.dni from persones p join soci s on p.id_persona = s.id_persona"
     );
     res.json(rows);
@@ -128,7 +128,7 @@ app.get("/soci", async (req, res) => {
 
 app.get("/admins", async (req, res) => {
   try{
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "select p.id_persona, p.nom, p.dni, p.tipus, a.carrec from persones p join admins a on p.id_persona = a.id_persona"
     );
     res.json(rows);
@@ -140,7 +140,7 @@ app.get("/admins", async (req, res) => {
 app.get("/prestecs/:id/:soci/:recurs", async (req, res) => {
   try{
     const { id ,soci ,recurs} = req.params;
-    const [rows] = await con.promise().query(
+    const [rows] = await con.query(
       "select * from prestec where id_persona = ? and id_recurso = ? and id_prestec = ?",
       [soci, recurs, id]
     );
@@ -162,7 +162,7 @@ app.post("/persona", async (req, res) => {
       error.status = 400;
       throw error;
     }
-    const [insert] = await con.promise().query(
+    const [insert] = await con.query(
       "insert into persones (nom, dni, tipus) values (? ,? ,?)",
       [nom, dni, tipus]
     );
@@ -182,6 +182,7 @@ app.post("/persona", async (req, res) => {
 });
 
 app.post("/llibre", async (req, res) =>{
+  let connection;
   try{
     const { id_biblioteca, titol, disponibles, autor} = req.body;
     const id_tipus = 1;
@@ -191,7 +192,11 @@ app.post("/llibre", async (req, res) =>{
       error.status = 400;
       throw error;
     }
-    const [insert1] = await con.promise().query(
+
+    connection = await con.getConnection();
+    await connection.beginTransaction();
+
+    const [insert1] = await con.query(
       "insert into recursos (id_biblioteca, titol, disponibles, id_tipus) values (?, ?, ?, ?)",
       [id_biblioteca, titol, disponibles, id_tipus]
     );
@@ -204,7 +209,7 @@ app.post("/llibre", async (req, res) =>{
     // iguals el id del recurs i el del llibre
     const id_recurs = insert1.insertId;
 
-    const [insert2] = await con.promise().query(
+    const [insert2] = await con.query(
       "insert into llibre (id_llibre, autor) values (?, ?)",
       [id_recurs, autor]
     );
@@ -214,15 +219,27 @@ app.post("/llibre", async (req, res) =>{
       throw error;
     }
 
+    await connection.commit();
     res.status(201).json({message: "Llibre insertat"});
   
   }catch (e){
+    if(connection){
+      await connection.rollback();
+      console.log("Rollback realizado");
+    }
+    
     console.error("Error inesperat:", e.message);
     res.status(e.status || 500).json({ error: e.message });
+  }finally{
+    if(connection){
+      connection.release();
+      console.log("Conexión liberada.");
+    }
   }
 });
 
 app.post("/revista", async (req, res) =>{
+  let connection;
   try{
     const { id_biblioteca, titol, disponibles, autor, fecha } = req.body;
     const id_tipus = 2;
@@ -232,7 +249,11 @@ app.post("/revista", async (req, res) =>{
       error.status = 400;
       throw error;
     }
-    const [insert1] = await con.promise().query(
+
+    connection = await con.getConnection();
+    await connection.beginTransaction();
+
+    const [insert1] = await con.query(
       "insert into recursos (id_biblioteca, titol, disponibles, id_tipus) values (?, ?, ?, ?)",
       [id_biblioteca, titol, disponibles, id_tipus]
     );
@@ -244,7 +265,7 @@ app.post("/revista", async (req, res) =>{
 
     const id_recurs = insert1.insertId;
 
-    const [insert2] = await con.promise().query(
+    const [insert2] = await con.query(
       "insert into revista (id_revista, autor, fecha) values (?, ?, ?)",
       [id_recurs, autor, fecha]
     );
@@ -254,15 +275,27 @@ app.post("/revista", async (req, res) =>{
       throw error;
     }
 
+    await connection.commit();
     res.status(201).json({message: "Revista insertada"});
   
   }catch (e){
+    if(connection){
+      await connection.rollback();
+      console.log("Rollback realizado");
+    }
+
     console.error("Error inesperat:", e.message);
     res.status(e.status || 500).json({ error: e.message });
+  }finally{
+    if(connection){
+      connection.release();
+      console.log("Conexión liberada.");
+    }
   }
 });
 
 app.post("/pelicula", async (req, res) =>{
+  let connection;
   try{
     const { id_biblioteca, titol, disponibles, director, genere } = req.body;
     const id_tipus = 3;
@@ -272,7 +305,11 @@ app.post("/pelicula", async (req, res) =>{
       error.status = 400;
       throw error;
     }
-    const [insert1] = await con.promise().query(
+
+    connection = await con.getConnection();
+    await connection.beginTransaction();
+
+    const [insert1] = await connection.query(
       "insert into recursos (id_biblioteca, titol, disponibles, id_tipus) values (?, ?, ?, ?)",
       [id_biblioteca, titol, disponibles, id_tipus]
     );
@@ -283,8 +320,7 @@ app.post("/pelicula", async (req, res) =>{
     }
 
     const id_recurs = insert1.insertId;
-
-    const [insert2] = await con.promise().query(
+    const [insert2] = await connection.query(
       "insert into peli (id_peli, director, genere) values (?, ?, ?)",
       [id_recurs, director, genere]
     );
@@ -294,15 +330,27 @@ app.post("/pelicula", async (req, res) =>{
       throw error;
     }
 
+    await connection.commit();
     res.status(201).json({message: "Pelicula insertada"});
   
   }catch (e){
+    if(connection){
+      await connection.rollback();
+      console.log("Rollback realizado");
+    }
+    
     console.error("Error inesperat:", e.message);
     res.status(e.status || 500).json({ error: e.message });
+  }finally{
+    if(connection){
+      connection.release();
+      console.log("Conexión liberada.");
+    }
   }
 });
 
 app.post("/admins", async (req, res) =>{
+  let connection;
   try{
     const { id_biblioteca, nom, dni, carrec } = req.body;
     
@@ -311,7 +359,11 @@ app.post("/admins", async (req, res) =>{
       error.status = 400;
       throw error;
     }
-    const [insert1] = await con.promise().query(
+
+    connection = await con.getConnection();
+    await connection.beginTransaction();
+
+    const [insert1] = await con.query(
       "insert into persones (id_biblioteca, nom, dni, tipus) values (?, ?, ?, administrador)",
       [id_biblioteca, nom, dni]
     );
@@ -323,7 +375,7 @@ app.post("/admins", async (req, res) =>{
 
     const id_persona = insert1.insertId;
 
-    const [insert2] = await con.promise().query(
+    const [insert2] = await con.query(
       "insert into admins (id_persona, carrec) values (?, ?)",
       [id_persona, carrec]
     );
@@ -333,16 +385,28 @@ app.post("/admins", async (req, res) =>{
       throw error;
     }
 
+    await connection.commit();
     res.status(201).json({message: "Administrador insertat"});
     }
   
   catch (e){
+    if(connection){
+      await connection.rollback();
+      console.log("Rollback realizado");
+    }
+
     console.error("Error inesperat:", e.message);
     res.status(e.status || 500).json({ error: e.message });
+  }finally{
+    if(connection){
+      connection.release();
+      console.log("Conexión liberada.");
+    }
   }
 });
 
 app.post("/soci", async (req, res) =>{
+  let connection;
   try{
     const { id_biblioteca, nom, dni } = req.body;
     
@@ -351,7 +415,11 @@ app.post("/soci", async (req, res) =>{
       error.status = 400;
       throw error;
     }
-    const [insert1] = await con.promise().query(
+
+    connection = await con.getConnection();
+    await connection.beginTransaction();
+
+    const [insert1] = await con.query(
       "insert into persones (id_biblioteca, nom, dni, tipus) values (?, ?, ?, soci)",
       [id_biblioteca, nom, dni]
     );
@@ -363,7 +431,7 @@ app.post("/soci", async (req, res) =>{
 
     const id_persona = insert1.insertId;
 
-    const [insert2] = await con.promise().query(
+    const [insert2] = await con.query(
       "insert into soci (id_persona) values (?)",
       [id_persona]
     );
@@ -373,11 +441,23 @@ app.post("/soci", async (req, res) =>{
       throw error;
     }
 
+    await connection.commit();
     res.status(201).json({message: "Soci insertat"});
   
   }catch (e){
+    if(connection){
+      await connection.rollback();
+      console.log("Rollback realizado");
+    }
+
     console.error("Error inesperat:", e.message);
     res.status(e.status || 500).json({ error: e.message });
+
+  }finally{
+    if(connection){
+      connection.release();
+      console.log("Conexión liberada.");
+    }
   }
 });
 
