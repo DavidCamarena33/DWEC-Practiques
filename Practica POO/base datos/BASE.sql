@@ -15,7 +15,7 @@ CREATE TABLE tiporecursos (
 
 CREATE TABLE recursos (
     id_recurso INT AUTO_INCREMENT PRIMARY KEY,
-    id_biblioteca INT NOT NULL,
+    id_biblioteca INT,
     titol VARCHAR(100) NOT NULL,
     disponibles INT DEFAULT 0,
     id_tipus INT NOT NULL,

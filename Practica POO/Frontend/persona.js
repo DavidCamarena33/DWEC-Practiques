@@ -3,7 +3,7 @@ function ver() {
   var admin = document.getElementById("admin");
   var tipus = document.getElementById("tipus");
 
-  var radioadm = document.getElementById("administrador");
+  var radioadm = document.getElementById("encarregat");
   var radioayu = document.getElementById("ayudante");
 
   if (tipus.value === "administrador") {
@@ -15,15 +15,12 @@ function ver() {
   } else {
     admin.hidden = true;
     formulario.action = "/soci";
+    radioadm.required = false;
+    radioayu.required = false;
   }
-
-  radioadm.required = false;
-  radioayu.required = false;
 }
 
 var formulario = document.getElementById("formulario");
-
-
 
 formulario.addEventListener("submit", (event) =>{
     event.preventDefault();
@@ -53,7 +50,7 @@ formulario.addEventListener("submit", (event) =>{
 
     const data = {
         nom: nombre,
-        dni: dni,
+        dni: dni
 
     };
 
@@ -73,10 +70,10 @@ formulario.addEventListener("submit", (event) =>{
     }
 
     fetch(url, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
   body: JSON.stringify(data),
     })
   .then((response) => {
