@@ -1,10 +1,12 @@
 import  express from 'express';
 import {con} from './conectar.js';
+import cors from 'cors';
 // const con = require('./conectar');
 
 const app = express()
 const port = 3000
 
+app.use(cors());
 app.use(express.json());
 
 
@@ -12,7 +14,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
-app.get("/recursos", async (req, res) => {36
+app.get("/recursos", async (req, res) => {
   try {
     const [rows] = await con.query(
       "SELECT * from recursos"
@@ -23,7 +25,7 @@ app.get("/recursos", async (req, res) => {36
   }
 });
 
-app.get("/llibre", async (req, res) => {36
+app.get("/llibre", async (req, res) => {
   try {
     const [rows] = await con.query(
       "SELECT r.id_recurso, r.titol, l.autor , r.disponibles FROM recursos r JOIN llibre l ON r.id_recurso = l.id_llibre"
@@ -184,10 +186,10 @@ app.post("/persona", async (req, res) => {
 app.post("/llibre", async (req, res) =>{
   let connection;
   try{
-    const { id_biblioteca, titol, disponibles, autor} = req.body;
+    const {  titol, disponibles, autor} = req.body;
     const id_tipus = 1;
     
-    if( !id_biblioteca || !titol || !disponibles || !autor){
+    if( !titol || !disponibles || !autor){
       const error = new Error("Falten dades");
       error.status = 400;
       throw error;
@@ -197,8 +199,8 @@ app.post("/llibre", async (req, res) =>{
     await connection.beginTransaction();
 
     const [insert1] = await con.query(
-      "insert into recursos (id_biblioteca, titol, disponibles, id_tipus) values (?, ?, ?, ?)",
-      [id_biblioteca, titol, disponibles, id_tipus]
+      "insert into recursos ( titol, disponibles, id_tipus) values ( ?, ?, ?)",
+      [ titol, disponibles, id_tipus]
     );
     if(insert1.affectedRows === 0){
       const error = new Error("No es posible insertar el llibre");
@@ -241,10 +243,10 @@ app.post("/llibre", async (req, res) =>{
 app.post("/revista", async (req, res) =>{
   let connection;
   try{
-    const { id_biblioteca, titol, disponibles, autor, fecha } = req.body;
+    const { titol, disponibles, autor, fecha } = req.body;
     const id_tipus = 2;
     
-    if( !id_biblioteca || !titol || !disponibles || !autor || !fecha ){
+    if( !titol || !disponibles || !autor || !fecha ){
       const error = new Error("Falten dades");
       error.status = 400;
       throw error;
@@ -254,8 +256,8 @@ app.post("/revista", async (req, res) =>{
     await connection.beginTransaction();
 
     const [insert1] = await con.query(
-      "insert into recursos (id_biblioteca, titol, disponibles, id_tipus) values (?, ?, ?, ?)",
-      [id_biblioteca, titol, disponibles, id_tipus]
+      "insert into recursos ( titol, disponibles, id_tipus) values ( ?, ?, ?)",
+      [ titol, disponibles, id_tipus]
     );
     if(insert1.affectedRows === 0){
       const error = new Error("No es posible insertar la revista");
@@ -297,10 +299,10 @@ app.post("/revista", async (req, res) =>{
 app.post("/pelicula", async (req, res) =>{
   let connection;
   try{
-    const { id_biblioteca, titol, disponibles, director, genere } = req.body;
+    const { titol, disponibles, director, genere } = req.body;
     const id_tipus = 3;
     
-    if( !id_biblioteca || !titol || !disponibles || !director || !genere ){
+    if( !titol || !disponibles || !director || !genere ){
       const error = new Error("Falten dades");
       error.status = 400;
       throw error;
@@ -310,8 +312,8 @@ app.post("/pelicula", async (req, res) =>{
     await connection.beginTransaction();
 
     const [insert1] = await connection.query(
-      "insert into recursos (id_biblioteca, titol, disponibles, id_tipus) values (?, ?, ?, ?)",
-      [id_biblioteca, titol, disponibles, id_tipus]
+      "insert into recursos ( titol, disponibles, id_tipus) values ( ?, ?, ?)",
+      [ titol, disponibles, id_tipus]
     );
     if(insert1.affectedRows === 0){
       const error = new Error("No es posible insertar la pelicula");
@@ -352,9 +354,9 @@ app.post("/pelicula", async (req, res) =>{
 app.post("/admins", async (req, res) =>{
   let connection;
   try{
-    const { id_biblioteca, nom, dni, carrec } = req.body;
+    const { nom, dni, carrec } = req.body;
     
-    if( !id_biblioteca || !nom || !dni || !carrec ){
+    if( !nom || !dni || !carrec ){
       const error = new Error("Falten dades");
       error.status = 400;
       throw error;
@@ -364,8 +366,8 @@ app.post("/admins", async (req, res) =>{
     await connection.beginTransaction();
 
     const [insert1] = await con.query(
-      "insert into persones (id_biblioteca, nom, dni, tipus) values (?, ?, ?, administrador)",
-      [id_biblioteca, nom, dni]
+      "insert into persones ( nom, dni, tipus) values ( ?, ?, 'administrador')",
+      [ nom, dni]
     );
     if(insert1.affectedRows === 0){
       const error = new Error("No es posible insertar el admin");
@@ -408,9 +410,9 @@ app.post("/admins", async (req, res) =>{
 app.post("/soci", async (req, res) =>{
   let connection;
   try{
-    const { id_biblioteca, nom, dni } = req.body;
+    const { nom, dni } = req.body;
     
-    if( !id_biblioteca || !nom || !dni ){
+    if( !nom || !dni ){
       const error = new Error("Falten dades");
       error.status = 400;
       throw error;
@@ -420,8 +422,8 @@ app.post("/soci", async (req, res) =>{
     await connection.beginTransaction();
 
     const [insert1] = await con.query(
-      "insert into persones (id_biblioteca, nom, dni, tipus) values (?, ?, ?, soci)",
-      [id_biblioteca, nom, dni]
+      "insert into persones ( nom, dni, tipus) values ( ?, ?, 'soci')",
+      [ nom, dni]
     );
     if(insert1.affectedRows === 0){
       const error = new Error("No es posible insertar el soci");
