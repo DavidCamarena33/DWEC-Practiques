@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Formulari de persona</h1>
-    <form method="post">
+    <form method="post" action="/soci" id="formulario">
         <label for="nom">Nom:</label>
         <input type="text" name="nom" id="nom"><br><br>
 
@@ -15,11 +15,21 @@
         <input type="text" name="dni" id="dni"><br><br>
 
         <label for="tipus">Tipus:</label>
-        <select name="tipus" id="tipus">
+        <select name="tipus" id="tipus" onchange="ver()">
             <option value="soci">Soci</option>
-            <option value="admnistrador">Administrador</option>
-        </select>
+            <option value="administrador">Administrador</option>
+        </select><br>
+
+        <div id="admin" hidden>
+            <input type="radio" name="carrec" id="encarregat">
+            <label for="administrador">Administrador</label><br>
+            <input type="radio" name="carrec" id="ayudante">
+            <label for="ayudante">Ayudante</label>
+        </div><br>
+
+        <button type="submit" value="Enviar">Enviar</button>
     </form>
 
-</body>
+    <script src="persona.js"></script>
+</body>  
 </html>
