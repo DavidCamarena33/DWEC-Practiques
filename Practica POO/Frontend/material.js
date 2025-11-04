@@ -39,8 +39,6 @@ function ver(){
     }
 }
 
-window.onload = ver;
-
 const formulario = document.getElementById("formulario");
 
 formulario.addEventListener("submit", (event) =>{
@@ -114,7 +112,6 @@ formulario.addEventListener("submit", (event) =>{
         data["genere"] = genere;
         url = "http://localhost:3000/pelicula";
     }
-
 
     fetch(url, {
     method: "POST",

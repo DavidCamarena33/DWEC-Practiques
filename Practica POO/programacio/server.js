@@ -1,5 +1,5 @@
 import  express from 'express';
-import {con} from './conectar.js';
+import con from './conectar.js';
 import cors from 'cors';
 // const con = require('./conectar');
 

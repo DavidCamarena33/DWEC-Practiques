@@ -1,0 +1,63 @@
+services:
+
+  # --- Servicio 1: Base de Datos (MySQL) ---
+  db:
+    # ... (Todo esto déjalo igual)
+    image: mysql/mysql-server:latest
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./base datos/BASE.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mi-red-app
+
+  # --- Servicio 2: Backend (Node.js) ---
+  backend:
+    container_name: node_backend
+    restart: always
+    build:
+      context: ./programacio
+      dockerfile: Dockerfile
+    ports:
+      - "${NODE_PORT}:${NODE_PORT}"
+    environment: 
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
+    depends_on:
+      - db
+    networks:
+      - mi-red-app
+    volumes:
+      # 1. El "Espejo" (sigue igual)
+      - ./programacio:/usr/src/app
+
+      # 2. LA SOLUCIÓN: Usamos un VOLUMEN CON NOMBRE
+      # Esto le dice a Docker: "Crea un volumen llamado 
+      # 'node_modules_data' y móntalo ENCIMA de /usr/src/app/node_modules"
+      # Esto tiene prioridad sobre el "espejo" y protege los módulos.
+      - node_modules_data:/usr/src/app/node_modules
+
+# Definición de la red
+networks:
+  mi-red-app:
+    driver: bridge
+
+# Definición de TODOS los volúmenes
+volumes:
+  # El de la base de datos (ya lo tenías)
+  mysql-data:
+    driver: local
+  
+  # AÑADE ESTE NUEVO VOLUMEN
+  node_modules_data:
+    driver: local
