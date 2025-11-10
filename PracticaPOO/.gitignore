@@ -1,0 +1,21 @@
+# Archivo de Entorno (¡MUY IMPORTANTE!)
+# Contiene todas tus contraseñas y secretos.
+# ¡NUNCA subas este archivo a GitHub!
+.env
+
+# Dependencias de Node.js
+# Se ignoran en todas las carpetas (raíz, programacio/, Frontend/, etc.)
+node_modules/
+
+# Archivos de Log
+# Generados por npm o por la aplicación
+npm-debug.log*
+*.log
+
+# Archivos del Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# Archivos del Editor de Código (Opcional, pero recomendado)
+.vscode/
+.idea/
