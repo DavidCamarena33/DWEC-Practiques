@@ -5,6 +5,8 @@ services:
     container_name: mysql_db
     restart: always
     environment:
+      # Esto lee las variables MYSQL_... de tu fichero .env
+      # y las usa para configurar el contenedor de MySQL.
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
@@ -30,7 +32,13 @@ services:
     command: npm run test
       
     environment: 
-      DB_HOST: ${DB_HOST}
+      # --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+      # Le decimos al backend que el host de la BD se llama 'db',
+      # que es el nombre de tu servicio de MySQL en esta red.
+      DB_HOST: db
+
+      # Esto "traduce" las variables para tu app Node.js
+      # (conectar.js busca DB_USER, no MYSQL_USER)
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       DB_NAME: ${MYSQL_DATABASE}
@@ -39,13 +47,11 @@ services:
     networks:
       - mi-red-app
     volumes:
-      # 1. El "Espejo" (sigue igual)
+      # 1. Monta tu código para que nodemon vea los cambios
       - ./programacio:/usr/src/app
 
-      # 2. LA SOLUCIÓN: Usamos un VOLUMEN CON NOMBRE
-      # Esto le dice a Docker: "Crea un volumen llamado 
-      # 'node_modules_data' y móntalo ENCIMA de /usr/src/app/node_modules"
-      # Esto tiene prioridad sobre el "espejo" y protege los módulos.
+      # 2. Protege la carpeta node_modules de ser sobrescrita
+      # (Esta es una MUY BUENA práctica que ya tenías)
       - node_modules_data:/usr/src/app/node_modules
 
 # Definición de la red
@@ -55,11 +61,10 @@ networks:
 
 # Definición de TODOS los volúmenes
 volumes:
-  # El de la base de datos (ya lo tenías)
+  # El de la base de datos
   mysql-data:
     driver: local
   
-  # AÑADE ESTE NUEVO VOLUMEN
+  # El de los módulos de Node
   node_modules_data:
     driver: local
-
