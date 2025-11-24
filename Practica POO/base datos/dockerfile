@@ -1,6 +1,0 @@
-FROM mysql/mysql-server:latest
-ENV MYSQL_ROOT_PASSWORD=daw123
-ENV MYSQL_DATABASE=bibliotecagen
-ENV MYSQL_USER=david
-ENV MYSQL_PASSWORD=daw123
-COPY BASE.sql /docker-entrypoint-initdb.d/

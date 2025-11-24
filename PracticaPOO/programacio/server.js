@@ -6,6 +6,7 @@ import cors from 'cors';
 const app = express();
 const port = process.env.NODE_PORT || 3000
 
+
 let comprobaruser = (req, res, next) => {
   if(req.body){
     if(req.body.nom){
@@ -421,7 +422,7 @@ app.post("/admins", async (req, res) =>{
   }
 });
 
-app.post("/soci", async (req, res) =>{
+app.post("/soci", async (req, res, next) =>{
   let connection;
   try{
     const { nom, dni } = req.body;
@@ -466,8 +467,7 @@ app.post("/soci", async (req, res) =>{
       console.log("Rollback realizado");
     }
 
-    console.error("Error inesperat:", e.message);
-    res.status(e.status || 500).json({ error: e.message });
+    next(err);
 
   }finally{
     if(connection){
@@ -477,6 +477,57 @@ app.post("/soci", async (req, res) =>{
   }
 });
 
+app.use((err, req, res, next) => {
+  console.error("❌ Error capturado:", err);
+
+  // Valores por defecto
+  let status = 500;
+  let message = "Error interno del servidor";
+
+  // 📦 Errores MySQL comunes
+  if (err.code) {
+    switch (err.code) {
+      case "ER_DUP_ENTRY":
+        status = 409;
+        message = "Registro duplicado";
+        break;
+      case "ER_BAD_FIELD_ERROR":
+        status = 400;
+        message = "Campo o columna no válido";
+        break;
+      case "ER_NO_REFERENCED_ROW_2":
+      case "ER_ROW_IS_REFERENCED_2":
+        status = 409;
+        message = "Violación de clave foránea";
+        break;
+      case "ER_PARSE_ERROR":
+        status = 400;
+        message = "Error de sintaxis SQL";
+        break;
+      case "ER_ACCESS_DENIED_ERROR":
+        status = 403;
+        message = "Acceso denegado a la base de datos";
+        break;
+      case "PROTOCOL_CONNECTION_LOST":
+        status = 503;
+        message = "Conexión con la base de datos perdida";
+        break;
+      default:
+        message = err.message || message;
+    }
+  } else if (err.status) {
+    // Si se definió un código HTTP en el error manualmente
+    status = err.status;
+    message = err.message;
+  } else if (err.message) {
+    // Error genérico con mensaje
+    message = err.message;
+  }
+
+  res.status(status).json({ error: message });
+});
+
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
+

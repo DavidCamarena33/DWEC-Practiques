@@ -13,6 +13,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
+      
     volumes:
       - mysql-data:/var/lib/mysql
       - ./base datos/BASE.sql:/docker-entrypoint-initdb.d/init.sql
@@ -32,9 +33,7 @@ services:
     command: npm run test
       
     environment: 
-      # --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-      # Le decimos al backend que el host de la BD se llama 'db',
-      # que es el nombre de tu servicio de MySQL en esta red.
+    
       DB_HOST: db
 
       # Esto "traduce" las variables para tu app Node.js

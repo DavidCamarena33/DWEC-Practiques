@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/users.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+    <form method="post" action="/usuarios" id="formulario">
+        <label for="name">Nombre</label>
+        <input type="text" name="name" id="name"><br>
+
+        <label for="pass">Contrasenya</label>
+        <input type="password" name="pass" id="pass"><br>
+
+        <label for="role">Rol</label>
+        <select name="role" id="role">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select><br>
+
+        <input type="submit" name="enviar" id="enviar">
+    </form>
+
+</body>
+</html>
