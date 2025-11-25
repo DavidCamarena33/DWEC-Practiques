@@ -2,6 +2,7 @@ import express from 'express'
 import bcrypt from 'bcrypt'
 import connection from './db.js'
 import jwt from "jsonwebtoken"
+import cookieParser from "cookie-parser"
 const secretKey = "Fiasco";
 
 const app = express()
@@ -10,6 +11,7 @@ const port = 3000
 const endopoint = '/api/users'
 
 app.use(express.json())
+app.use(cookieParser())
 
 app.get(endopoint, verifyToken, async (req, res) => {
     try {
@@ -84,6 +86,7 @@ function verifyToken(req, res, next) {
   }
   try {
     const payload = jwt.verify(token, secretKey);
+    req.name = payload.name;
     req.role = payload.role;
     next();
   } catch (error) {
