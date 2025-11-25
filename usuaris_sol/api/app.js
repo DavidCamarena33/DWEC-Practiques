@@ -13,19 +13,43 @@ const endopoint = '/api/users'
 app.use(express.json())
 app.use(cookieParser())
 
-app.get(endopoint, verifyToken, async (req, res) => {
+const requireAdmin = async (req, res, next) => {
     try {
-        const role = req.role;
-
-        if(role == "admin"){
-           const [results] = await connection.query(
-            'SELECT name, role FROM users'
-            );
-            res.status(200).json(results) 
-        }else{
+        if(req.role !== "admin"){
             res.status(403).json({message: "No tienes suficientes permisos"});
+        }else{
+            next();
         }
-        
+    } catch (err) {
+        errorHandler(err)
+    }
+}
+
+function verifyToken(req, res, next) {
+//   const header = req.header("Authorization") || "";
+//   const token = header.split(" ")[1];
+
+  const token = req.cookies.galleta;
+
+  if (!token) {
+    return res.status(401).json({ message: "Token not provied" });
+  }
+  try {
+    const payload = jwt.verify(token, secretKey);
+    req.name = payload.name;
+    req.role = payload.role;
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: "Token not valid" });
+  }
+}
+
+app.get(endopoint, verifyToken, requireAdmin, async (req, res) => {
+    try {
+        const [results] = await connection.query(
+        'SELECT name, role FROM users'
+        );
+        res.status(200).json(results)    
     } catch (err) {
         errorHandler(err)
     }
@@ -41,7 +65,7 @@ app.post(endopoint, async (req, res) => {
             'INSERT INTO users(name, password, role) VALUES(?, ?, ?)',
             [name, hashedPassword, role]
         );
-        res.status(200).json(results)
+        res.status(200).json({message: "Persona insertada correctamente"})
     } catch (err) {
         errorHandler(err)
     }
@@ -62,8 +86,12 @@ app.post('/login', async (req, res) =>{
         
         if(login.length == 1){
             if(passwordMatched){               
-                const token = jwt.sign({ name, password, role }, secretKey, { expiresIn: "1h" });
-                return res.status(200).json({ token });   
+                const token = jwt.sign({ name, role }, secretKey, { expiresIn: "1h" });
+                res.cookie('galleta', token, {
+                    httpOnly: true,    
+                    maxAge: 3600000 
+                    });
+                return res.status(200).json({message: "Autentificacion correcta" });   
             }else{
                 res.status(500).json({ message: "Error del servidor" });
             }
@@ -75,47 +103,6 @@ app.post('/login', async (req, res) =>{
         errorHandler(err)
     }
 });
-
-
-
-function verifyToken(req, res, next) {
-  const header = req.header("Authorization") || "";
-  const token = header.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ message: "Token not provied" });
-  }
-  try {
-    const payload = jwt.verify(token, secretKey);
-    req.name = payload.name;
-    req.role = payload.role;
-    next();
-  } catch (error) {
-    return res.status(403).json({ message: "Token not valid" });
-  }
-}
-
-// const requireAdmin = async (req, res, next) => {
-//     try {
-//         const { name, password } = req.body
-//         const [results] = await connection.query(
-//             'SELECT role, password FROM users WHERE name = ?',
-//             [name]
-//         )
-//         const passwordMatched = await bcrypt.compare(password, results[0].password);
-//         if (results.length === 0) {
-//             res.status(401).send('Usuari no autoritzat')
-//         } else {
-//             if (results[0].role === 'admin' && passwordMatched) {
-//                 next()
-//             } else {
-//                 res.status(403).send('No tens permissos')
-//             }
-//         }
-//     } catch (err) {
-//         errorHandler(err)
-//     }
-// }
-
 
 const errorHandler = (err, req, res, next) => {
     console.error(err.stack)
