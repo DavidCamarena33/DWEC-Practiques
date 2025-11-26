@@ -1,12 +1,13 @@
 import express from 'express'
 import bcrypt from 'bcrypt'
 import connection from './db.js'
+import 'dotenv/config';
 import jwt from "jsonwebtoken"
 import cookieParser from "cookie-parser"
-const secretKey = "Fiasco";
+const secretKey = process.env.SECRET;
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000;
 
 const endopoint = '/api/users'
 
