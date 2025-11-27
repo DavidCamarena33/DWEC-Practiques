@@ -1,32 +1,37 @@
+import express from 'express'
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
 const secretKey = process.env.SECRET;
 import 'dotenv/config';
 import cookieParser from "cookie-parser"
 
-import { QloginVerify, QInsertUser } from "../services/querys.service";
+const app = express()
+app.use(cookieParser())
 
-export const InsertUser = async (req, res) => {
+
+import { QloginVerify, QInsertUser } from "../services/querys.service.js";
+
+export const InsertUser = async (req, res, next) => {
     try {
         const { name, password, role = "user" } = req.body
 
         const results = await QInsertUser(name, password, role);
 
-        if(results.affectedRows() = 1){
+        if(results.affectedRows === 1){
             res.status(200).json({message: "Persona insertada correctamente"})
         }else{
             res.status(400).json({message: "Persona no insertada"})
         }
     } catch (err) {
-        errorHandler(err)
+        next(err)
     }
 }
 
-export const loginVerify = async (req, res) => {
+export const loginVerify = async (req, res, next) => {
     try{
             const { name, password } = req.body;
     
-            const login = await QloginVerify
+            const login = await QloginVerify(name, password);
     
             const role = login[0].role;
             
@@ -48,6 +53,6 @@ export const loginVerify = async (req, res) => {
             }
     
         }catch (err) {
-            errorHandler(err)
+            next(err)
         }
 }

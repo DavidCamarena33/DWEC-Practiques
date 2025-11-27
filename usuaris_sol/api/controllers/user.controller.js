@@ -1,11 +1,11 @@
-import { QGetAllUsers } from "../services/querys.service";
+import { QGetAllUsers } from "../services/querys.service.js";
 
-export const GetUsers = async (req, res) => {
+export const GetUsers = async (req, res, next) => {
     try {
         const results = await QGetAllUsers();
 
         res.status(200).json(results);
     } catch (err) {
-        errorHandler(err);
+        next(err);
     }
 };

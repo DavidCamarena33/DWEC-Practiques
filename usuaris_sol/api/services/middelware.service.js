@@ -1,7 +1,5 @@
-import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
 const secretKey = process.env.SECRET;
-
 
 export const requireAdmin = async (req, res, next) => {
     try {
@@ -33,3 +31,4 @@ export function verifyToken(req, res, next) {
     return res.status(403).json({ message: "Token not valid" });
   }
 }
+

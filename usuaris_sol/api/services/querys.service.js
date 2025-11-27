@@ -2,9 +2,13 @@ import connection from './db.service.js'
 import bcrypt from 'bcrypt'
 
 
-export const [QGetAllUsers] = await connection.query(
+export async function QGetAllUsers(){
+    const [results] = await connection.query(
         'SELECT name, role FROM users'
         );
+
+    return results;
+} 
 
 
 export async function QInsertUser(name, password, role){
