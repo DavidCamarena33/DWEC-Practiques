@@ -66,7 +66,11 @@ app.post(endopoint, async (req, res) => {
             'INSERT INTO users(name, password, role) VALUES(?, ?, ?)',
             [name, hashedPassword, role]
         );
-        res.status(200).json({message: "Persona insertada correctamente"})
+        if(results.affectedRows() = 1){
+            res.status(200).json({message: "Persona insertada correctamente"})
+        }else{
+            res.status(400).json({message: "Persona no insertada"})
+        }
     } catch (err) {
         errorHandler(err)
     }
