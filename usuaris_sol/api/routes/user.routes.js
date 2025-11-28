@@ -1,13 +1,13 @@
-import { GetUsers } from "../controllers/user.controller.js";
-import { InsertUser } from "../controllers/auth.controller.js";
-import { requireAdmin, verifyToken } from "../services/middelware.service.js";
+import { GetUsers, InsertUser, loginVerify } from "../controllers/user.controller.js";
+import { requireAdmin, verifyToken } from "../middelwares/middelware.js";
 import { Router } from "express";
 
 const router = Router();
 
-router.get('/', verifyToken, requireAdmin, GetUsers);
+router.get('/api/users', verifyToken, requireAdmin, GetUsers);
+router.post('/api/users', verifyToken, requireAdmin ,InsertUser);
 
-router.post('/', InsertUser);
+router.post('/login', loginVerify);
 
 
 export default router;

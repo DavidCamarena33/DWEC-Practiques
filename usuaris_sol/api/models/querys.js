@@ -1,4 +1,4 @@
-import connection from './db.service.js'
+import connection from '../services/db.service.js'
 import bcrypt from 'bcrypt'
 
 
@@ -24,7 +24,7 @@ export async function QInsertUser(name, password, role){
     return results;
 }
 
-export async function QloginVerify(name, password){
+export async function QloginVerify(name){
     const [login] = await connection.query(
                 'select role, password from users where name = ?',
                 [name]
