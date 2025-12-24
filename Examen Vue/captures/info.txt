@@ -1,0 +1,2 @@
+En el backend si que va el verifyToken pero al pasar a vue
+deixa de funcionar perque no se com recibir el token
